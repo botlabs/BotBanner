@@ -62,8 +62,11 @@ def main(r, session_data):
     for subname in SUB_LIST:
         sub = r.get_subreddit(subname)
         for user in list(banlist - set([user.name.lower() for user in sub.get_banned()])):
-            sub.add_ban(user)
-            print("BAN user.name")
+            try:
+                sub.add_ban(user)
+                print("BAN user.name")
+            except praw.errors.InvalidUser:
+                continue
 
 if __name__ == "__main__":
     try:
