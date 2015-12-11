@@ -16,13 +16,6 @@ USER_AGENT = "Bot Banner | /u/YOUR_MAIN_USERNAME_HERE"
 AUTH_TOKENS = ["identity", "read", "do_relationship", "modcontributors", "privatemessages"]
 EXPIRY_BUFFER = 60
 
-# A list of subs on which to ban users
-SUB_LIST = [
-"TODO",
-"TODO",
-"TODO",
-]
-
 def get_session_data():
     response = requests.post("https://www.reddit.com/api/v1/access_token",
       auth = requests.auth.HTTPBasicAuth(CLIENT_ID, CLIENT_SECRET),
@@ -59,8 +52,7 @@ def main(r, session_data):
     banlist_wiki = r.get_wiki_page("BansAllBots","bannedbots")
     banlist = set([name.strip().lower()[3:] for name in banlist_wiki.content_md.split("\n") if name.strip() != ""])
     
-    for subname in SUB_LIST:
-        sub = r.get_subreddit(subname)
+    for sub in r.get_my_moderation():
         for user in list(banlist - set([user.name.lower() for user in sub.get_banned()])):
             try:
                 sub.add_ban(user)
