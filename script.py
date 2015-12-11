@@ -13,7 +13,7 @@ REDIRECT_URI = 'http://127.0.0.1:65010/authorize_callback'
 
 # Configuration Settings
 USER_AGENT = "Bot Banner | /u/YOUR_MAIN_USERNAME_HERE"
-AUTH_TOKENS = ["identity", "read", "do_relationship", "modcontributors", "privatemessages"]
+AUTH_TOKENS = ["identity", "read", "do_relationship", "modcontributors", "privatemessages", "modself"]
 EXPIRY_BUFFER = 60
 
 def get_session_data():
