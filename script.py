@@ -13,7 +13,7 @@ REDIRECT_URI = 'http://127.0.0.1:65010/authorize_callback'
 
 # Configuration Settings
 USER_AGENT = "Bot Banner | /u/YOUR_MAIN_USERNAME_HERE"
-AUTH_TOKENS = ["identity", "read", "do_relationship", "modcontributors", "privatemessages", "modself"]
+AUTH_TOKENS = ["identity", "read", "do_relationship", "modcontributors", "privatemessages", "modself", "mysubreddits"]
 EXPIRY_BUFFER = 60
 
 def get_session_data():
@@ -56,7 +56,7 @@ def main(r, session_data):
         for user in list(banlist - set([user.name.lower() for user in sub.get_banned()])):
             try:
                 sub.add_ban(user)
-                print("BAN user.name")
+                print("Banning", user, "from", sub)
             except praw.errors.InvalidUser:
                 continue
 
