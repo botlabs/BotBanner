@@ -13,7 +13,7 @@ REDIRECT_URI = 'http://127.0.0.1:65010/authorize_callback'
 
 # Configuration Settings
 USER_AGENT = "Bot Banner | /u/YOUR_MAIN_USERNAME_HERE"
-AUTH_TOKENS = ["identity", "read", "do_relationship", "modcontributors"]
+AUTH_TOKENS = ["identity", "read", "do_relationship", "modcontributors", "privatemessages"]
 EXPIRY_BUFFER = 60
 
 # A list of subs on which to ban users
@@ -39,11 +39,23 @@ def get_praw():
     r.set_access_credentials(set(AUTH_TOKENS), session_data['access_token'])
     return (r, session_data)
 
+def accept_mod_invites(r):
+    for message in r.get_unread():
+        if message.body.startswith('**gadzooks!'):
+            sr = r.get_info(thing_id=message.subreddit.fullname)
+            try:
+                sr.accept_moderator_invite()
+            except praw.errors.InvalidInvite:
+                continue
+            message.mark_as_read()
+
 def main(r, session_data):
     EXPIRES_AT = session_data['retrieved_at'] + session_data['expires_in']
     if time.time() >= EXPIRES_AT - EXPIRY_BUFFER:
         raise praw.errors.OAuthInvalidToken
     ##### MAIN CODE #####
+    accept_mod_invites(r)
+    
     banlist_wiki = r.get_wiki_page("BansAllBots","bannedbots")
     banlist = set([name.strip().lower()[3:] for name in banlist_wiki.content_md.split("\n") if name.strip() != ""])
     
